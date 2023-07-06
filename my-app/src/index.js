@@ -1,15 +1,7 @@
 import { useState } from 'react';
-import {
-  View,
-  TextInput,
-  Button,
-  SafeAreaView,
-  Text,
-  FlatList,
-  Modal,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Button, SafeAreaView, Text, FlatList, Modal } from 'react-native';
 
+import { InputTask, TaskItem } from './components';
 import { styles } from './styles';
 
 export default function App() {
@@ -47,12 +39,7 @@ export default function App() {
     setSelectedTask(item);
   };
 
-  const handleRenderItem = ({ item }) => (
-    <TouchableOpacity style={styles.taskContainer} onPress={() => handleModal(item)}>
-      <Text style={styles.task}>{item.value}</Text>
-      <Text style={styles.delete}>X</Text>
-    </TouchableOpacity>
-  );
+  const handleRenderItem = ({ item }) => <TaskItem item={item} handleModal={handleModal} />;
 
   const handleDeleteTask = () => {
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== selectedTask.id));
@@ -67,19 +54,14 @@ export default function App() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={[styles.input, { borderColor }]}
-            placeholder="New task"
-            placeholderTextColor="#C5C9E7"
-            autoCorrect={false}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            onChangeText={handleTask}
-            value={task}
-          />
-          <Button title="Create" color="#424D9E" onPress={handleNewTask} disabled={!task.length} />
-        </View>
+        <InputTask
+          task={task}
+          borderColor={borderColor}
+          handleBlur={handleBlur}
+          handleFocus={handleFocus}
+          handleTask={handleTask}
+          handleNewTask={handleNewTask}
+        />
         <FlatList
           style={styles.taskListContainer}
           data={tasks}
